@@ -39,6 +39,59 @@ function handleDrop (event, ui ) {
 	
 
 
+
+
+
+
+
+
+
+///////////////////////////// Video objects //////////////////////////////////////
+
+
+var video1 = {
+	id:1,
+	title: "Why the web is dead | Christian Heilmann",
+	videoID: "CrcAPan028Y",
+	tags: ["javascript", "css", "html", "christian heilmann", "social media"],
+	description: "'The web is dead', was the introductory phrase of Christian Heilmann's TEDx speech. There is no excitement about new websites and the mobile phone is definitely not the easiest way of accessing the web when it comes to typing with your touch keyboard.</p><p> 'The problem with the internet was that we were like kittens with a laser pointer', he said. The new dawn of the internet was the app. There is an app for everything now days and the good thing is that apps are focused.",
+	rating: 5
+}
+
+displayResults(video1);
+
+function displayResults(video){
+	
+	// build the html for the requested video
+	var videoString = '';
+	videoString += '<article class="col-sm-4 draggable">';
+	videoString += '<img src="http://img.youtube.com/vi/' + video.videoID + '/mqdefault.jpg" alt="' + video.title + '">';
+	videoString += '<h3>' + video.title + '</h3>';
+	videoString += '<button class="btn btn-sm btn-info btn-block" name="' + video.id + '">More info</button>';
+	for (var i = 0; i < video.tags.length; i++){
+		videoString += '<span class="label label-success">' + video1.tags[i] + '</span>';
+	}
+	videoString += '</article>';
+
+	// inject into dom
+	$('#video-grid').append(videoString);
+
+}
+
+console.log(video1.title)
+for (var i = 0; i < video1.tags.length; i++){
+	console.log(video1.tags[i]);
+}
+
+
+
+
+
+
+
+
+//////////////////////////// Libraries ///////////////////////////////////////////////
+
 /*! jQuery UI Touch Punch 0.2.3 - For tablet devices
  * Copyright 2011–2014, Dave Furfero
  * Dual licensed under the MIT or GPL Version 2 licenses.*/
