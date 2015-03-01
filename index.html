@@ -8,8 +8,13 @@
     <meta name="description" content="Touch based interface for a video streaming service">
     <meta name="author" content="Tony Edwards">
 
-    <link rel="stylesheet" href="styles/bootstrapAndjQuieryUI.min.css">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -19,81 +24,127 @@
 
 <body>
 
+    <div class="menu-wrap">
+        <nav class="menu">
+            <div class="icon-list">
+                <a href="#"><i class="fa fa-fw fa-bell-o"></i><span>Home</span></a>
+                <a href="#"><i class="fa fa-fw fa-heart"></i><span>Favorites</span></a>
+                <a href="#"><i class="fa fa-fw fa-thumbs-o-up"></i><span>Likes</span></a>
+
+                <div class="tag-cloud">
+
+                    <h2>Your Tags</h2>
+
+                    <a href="#"><span class="label label-success">Science</span></a>
+                    <a href="#"><span class="label label-success">Technology</span></a>
+                    <a href="#"><span class="label label-success">Programming</span></a>
+                    <a href="#"><span class="label label-success">HTML</span></a>
+                    <a href="#"><span class="label label-success">CSS</span></a>
+                    <a href="#"><span class="label label-success">JavaScript</span></a>
+                    <a href="#"><span class="label label-success">jQuery</span></a>
+                    <a href="#"><span class="label label-success">Meta data</span></a>
+                    <a href="#"><span class="label label-success">Rich Snippets</span></a>
+                    <a href="#"><span class="label label-success">Minification</span></a>
+                    <a href="#"><span class="label label-success">Christian Heilman</span></a>
+                    <a href="#"><span class="label label-success">BootStrap</span></a>
+
+                </div>
+
+            </div>
+        
+        </nav>
+        <button class="close-button" id="close-button">Close Menu</button>
+    </div>
+
     <div class="container" id="container">
 
         <div class="row">
 
         	<header>
 
-                <div class="col-sm-3">
-                    <p>main menu</p>
+                <div class="col-sm-4">
+                    <button class="menu-button" id="open-button">Open Menu</button>
                 </div>
 
-                <div class="col-sm-6 searchArea input-group">
+                <div class="col-sm-4 input-group">
 
                     <input type="text" class="form-control" placeholder="Search" 
                            aria-describedby="basic-addon2">
                     <span class="input-group-addon" id="basic-addon2">Search</span>
+
                 </div>
 
-                <!-- <div class="col-sm-3">
-                    <p>spacer</p>
-                </div> -->
+                <div class="col-sm-4 ">
+                    <button class="btn btn-primary"><i class="fa fa-tablet fa-2x play"></i>Play</button>
+                    <button class="btn btn-primary"><i class="fa fa-desktop fa-2x play"></i>Play</button>
+                </div>
 
         	</header>
+        </div>
+
+        <div class="row">
 
         	<main class="col-sm-9">
 
-                <div class="row">
+                <h1>Search Results</h1>
 
-                    <div class="col-sm-4">
+                <section class="row">
+
+                    <article class="col-sm-4 draggable">
                         <img src="http://placehold.it/350x150">
-                        <p>This is some placeholder text</p>
-                    </div>
+                        <h3>This is the title</h3>
+                        <button class="btn btn-sm btn-info btn-block">More info</button>
+                        <span class="label label-success">Info</span>
+                    </article>
 
-                    <div class="col-sm-4">
+                    <article class="col-sm-4 draggable">
                         <img src="http://placehold.it/350x150">
-                        <p>This is some placeholder text</p>
-                    </div>
+                        <h3>This is the title</h3>
+                        <button class="btn btn-sm btn-info btn-block">More info</button>
+                        <span class="label label-success">Info</span>
+                    </article>
 
-                    <div class="col-sm-4">
+                    <article class="col-sm-4 draggable">
                         <img src="http://placehold.it/350x150">
-                        <p>This is some placeholder text</p>
-                    </div>
+                        <h3>This is the title</h3>
+                        <button class="btn btn-sm btn-info btn-block">More info</button>
+                        <span class="label label-success">Info</span>
+                    </article>
 
-                    <div class="col-sm-4">
+                    <article class="col-sm-4 draggable">
                         <img src="http://placehold.it/350x150">
-                        <p>This is some placeholder text</p>
-                    </div>
+                        <h3>This is the title</h3>
+                        <button class="btn btn-sm btn-info btn-block">More info</button>
+                        <span class="label label-success">Info</span>
+                    </article>
 
-                    <div class="col-sm-4">
+                    <article class="col-sm-4 draggable">
                         <img src="http://placehold.it/350x150">
-                        <p>This is some placeholder text</p>
-                    </div>
+                        <h3>This is the title</h3>
+                        <button class="btn btn-sm btn-info btn-block">More info</button>
+                        <span class="label label-success">Info</span>
+                    </article>
 
-                    <div class="col-sm-4">
+                    <article class="col-sm-4 draggable">
                         <img src="http://placehold.it/350x150">
-                        <p>This is some placeholder text</p>
-                    </div>
+                        <h3>This is the title</h3>
+                        <button class="btn btn-sm btn-info btn-block">More info</button>
+                        <span class="label label-success">Info</span>
+                    </article>
 
-                </div>
+                </section>
 
         	</main>
 
-        	<div class="col-sm-3">
+        	<div class="col-sm-3 playlist">
+
+                <h2>Your play queue</h2>
+
                 <div class="row sidebar">
 
                     <aside class="col-sm-12">
 
-                        <h2>Your play queue</h2>
-
-                        <p>This is some placeholder text</p>
-                        <p>This is some placeholder text</p>
-                        <p>This is some placeholder text</p>
-                        <p>This is some placeholder text</p>
-
-                        <button>Play on device</button>
-                        <button>Play on television</button>
+                        <div class="droppable"></div>
 
                     </aside>
 
@@ -104,12 +155,14 @@
         	<footer class="col-sm-12">
 
         	</footer>
+
         </div>
 
     </div>
 
     <script src="scripts/jquery-1.11.2.min.js"></script>
-    <script src="scripts/bootstrap.min.js" async></script>
-    <script src="scripts/script.js" async></script>
+    <script src="scripts/jquery-ui.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/script.js"></script>
 </body>
 </html>
