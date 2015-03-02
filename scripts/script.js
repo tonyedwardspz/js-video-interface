@@ -9,6 +9,27 @@ $(function() {
 	setUpPlayList();
 	registerDragDrop();
 	setUpListeners();
+
+	$( "#searchArea" ).keypress(function( event ) {
+		if ( event.which == 13 ) {
+		    event.preventDefault();
+		    var searchText = $('#searchArea').val();
+		    if (searchText != ""){
+				searchVideos(searchText);
+			} else {
+				BootstrapDialog.show({
+		            title: 'No search term',
+		            message: 'Please enter a search term and try again',
+		            buttons: [{
+	                	label: 'Close',
+	                	action: function(dialogItself){
+		                    dialogItself.close();
+		                }
+		            }]
+		        });
+			}
+		}
+	});
 });
 
 
@@ -110,8 +131,6 @@ function moreInfoDialog(video){
             }
         }]  
     });
-
-    //$('.modal-dialog').addClass('modal-lg');
 
 }
 
