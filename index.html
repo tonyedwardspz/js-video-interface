@@ -24,14 +24,76 @@
 
 <body>
 
-    <div class="menu-wrap">
-        <nav class="menu">
-            <div class="icon-list">
-                <a href="#"><i class="fa fa-fw fa-bell-o"></i><span>Home</span></a>
-                <a href="#"><i class="fa fa-fw fa-heart"></i><span>Favorites</span></a>
-                <a href="#"><i class="fa fa-fw fa-thumbs-o-up"></i><span>Likes</span></a>
+    <div class="container" id="container">
 
-                <div class="tag-cloud">
+        <div class="row navbar navbar-default navbar-fixed-top">
+
+        	<header>
+
+                <div class="col-sm-4">
+                    <button class="menu-button" id="open-button">Open Menu</button>
+                </div>
+
+                <div class="col-sm-4 input-group">
+
+                    <input type="text" class="form-control" placeholder="Search" 
+                           aria-describedby="basic-addon2" id="searchArea">
+                    <span class="input-group-addon" id="basic-addon2">Search</span>
+
+                </div>
+
+                <div class="col-sm-4 ">
+                    <button class="btn btn-primary" id="play-btn"><i class="fa fa-desktop fa-2x play"></i>Play</button>
+                </div>
+
+        	</header>
+        </div>
+
+        <div class="row content">
+
+        	<main class="col-sm-9">
+
+                <h1>Recent videos</h1>
+
+                <section class="row" id="video-grid">
+                    <!-- <article class="col-sm-4 draggable">
+                        <img src="http://placehold.it/350x150">
+                        <h3>This is the title</h3>
+                        <button class="btn btn-sm btn-info btn-block">More info</button>
+                        <span class="label label-success">Info</span>
+                    </article> -->
+                </section>
+
+        	</main>
+
+        	<div class="col-sm-3 playlist">
+
+                <h2>Your play queue</h2>
+
+                <div class="row sidebar">
+
+                    <aside class="col-sm-12">
+                        <div class="droppable"></div>
+                    </aside>
+
+                </div>
+
+        	</div>
+
+        	<footer class="col-sm-12"></footer>
+
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div class="menu-wrap" role="navigation">
+        <nav class="menu" role="menubar">
+            <div class="icon-list" role="menu">
+                <a href="#" role="menuitem"><i class="fa fa-fw fa-home"></i><span>Home</span></a>
+                <a href="#" role="menuitem"><i class="fa fa-fw fa-heart"></i><span>Favorites</span></a>
+                <a href="#" role="menuitem"><i class="fa fa-fw fa-thumbs-o-up"></i><span>Likes</span></a>
+
+                <div class="tag-cloud" role="presentation">
 
                     <h2>Your Tags</h2>
 
@@ -54,92 +116,24 @@
         <button class="close-button" id="close-button" type="submit" formtarget="_top">Close Menu</button>
     </div>
 
-    <div class="container" id="container">
-
-        <div class="row navbar navbar-default navbar-fixed-top">
-
-        	<header>
-
-                <div class="col-sm-4">
-                    <button class="menu-button" id="open-button">Open Menu</button>
+    <!-- Modal Dialog-->
+    <div class="modal fade" id="modal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <h4 class="modal-title" aria-labelledby="myModalLabel"></h4>
                 </div>
-
-                <div class="col-sm-4 input-group">
-
-                    <input type="text" class="form-control" placeholder="Search" 
-                           aria-describedby="basic-addon2" id="searchArea">
-                    <span class="input-group-addon" id="basic-addon2">Search</span>
-
+                <div class="modal-body">
+                    <p></p>
                 </div>
-
-                <div class="col-sm-4 ">
-                    <button class="btn btn-primary"><i class="fa fa-desktop fa-2x play"></i>Play</button>
+                <div class="modal-footer">
                 </div>
-
-        	</header>
-        </div>
-
-        <div class="row content">
-
-        	<main class="col-sm-9">
-
-                <h1>Recent videos</h1>
-
-                <section class="row" id="video-grid">
-
-                    <!-- <article class="col-sm-4 draggable">
-                        <img src="http://placehold.it/350x150">
-                        <h3>This is the title</h3>
-                        <button class="btn btn-sm btn-info btn-block">More info</button>
-                        <span class="label label-success">Info</span>
-                    </article> -->
-
-                </section>
-
-        	</main>
-
-        	<div class="col-sm-3 playlist">
-
-                <h2>Your play queue</h2>
-
-                <div class="row sidebar">
-
-                    <aside class="col-sm-12">
-
-                        <div class="droppable"></div>
-
-                    </aside>
-
-                </div>
-
-        	</div>
-
-        	<footer class="col-sm-12">
-
-        	</footer>
-
-        </div>
-
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title">Modal title</h4>
-      </div>
-      <div class="modal-body">
-        <p>One fine body…</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <script src="scripts/jquery-1.11.2.min.js"></script>
     <script src="scripts/jquery-ui.min.js"></script>

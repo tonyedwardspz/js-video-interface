@@ -6,8 +6,8 @@ $(function() {
 	    displayVideo(videoArray[i], i);
 	}
 
-	registerDragDrop();
 	setUpPlayList();
+	registerDragDrop();
 	setUpListeners();
 });
 
@@ -28,21 +28,91 @@ function setUpPlayList(){
 }
 
 
-// set up listeners for various dome elements
+// set up listeners for various dom elements
 function setUpListeners(){
-	var searchButton = $('#basic-addon2');
+	var searchButton = $('#basic-addon2'),
+		searchArea = $('#searchArea'),
+		playButton = $('#play-btn');
+
 	searchButton.click(function(ev) {
-		searchText = $('#searchArea').val();
+		searchText = searchArea.val();
 		if (searchText != ""){
 			searchVideos(searchText);
 		} else {
-			//BootstrapDialog = $('#modal').modal();
 			BootstrapDialog.show({
 	            title: 'No search term',
-	            message: 'Please enter a search term and try again'
+	            message: 'Please enter a search term and try again',
+	            buttons: [{
+                	label: 'Close',
+                	action: function(dialogItself){
+	                    dialogItself.close();
+	                }
+	            }]
 	        });
 		}
 	});
+
+	playButton.click(function(ev) {
+		BootstrapDialog.show({
+            title: 'Now playing',
+            message: 'Now playing your playlist',
+            buttons: [{
+            	label: 'Stop Playback',
+            	cssClass: 'btn-danger',
+                action: function(dialogItself){
+                    dialogItself.close();
+                }
+            }]
+        });
+	});
+
+	moreInfoListener();
+
+}
+
+
+// set up the more info listeners
+function moreInfoListener(){
+	var moreInfoButton = document.querySelectorAll('.more-info-btn')
+
+	for (var i = 0; i < moreInfoButton.length; i++){
+		moreInfoButton[i].addEventListener('click', function(ev) {
+			moreInfoDialog(videoArray[this.name - 1]);
+		});
+	}
+}
+
+function moreInfoDialog(video){
+	var moreInfoMessage = '';
+
+	moreInfoMessage += '<div class="more-info-container">';
+	moreInfoMessage += '<div class="screenshot"><iframe width="430" height="300" src="https://www.youtube.com/embed/' + video.videoID + '" frameborder="0" allowfullscreen></iframe></div>';
+	moreInfoMessage += '<div class="description"><p>' + video.description + '</p></div>';
+	moreInfoMessage += '<div class="ratings">This is the ratings</div>';
+	moreInfoMessage += '<div class="tags">This is the tags</div>';
+	moreInfoMessage += '</div>';
+
+	BootstrapDialog.show({
+        title: video.title,
+        message: moreInfoMessage,
+        size: 'size-wide',
+        buttons: [{
+            label: 'Add to Queue',
+            cssClass: 'btn-success',
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }, {
+            label: 'Dismiss',
+            cssClass: 'btn-danger',
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }]  
+    });
+
+    //$('.modal-dialog').addClass('modal-lg');
+
 }
 
 
@@ -86,6 +156,7 @@ function searchVideos(searchTerm){
 			displayVideo(vidMatch, i);
 		}
 		registerDragDrop();
+		moreInfoListener();
 	} else {
 		alert("no match found");
 	}
@@ -105,7 +176,7 @@ function displayVideo(video, itemNum){
 	videoString += '<article class="col-sm-4 draggable">';
 	videoString += '<img src="http://img.youtube.com/vi/' + video.videoID + '/mqdefault.jpg" alt="' + video.title + '">';
 	videoString += '<h3>' + video.title + '</h3>';
-	videoString += '<button class="btn btn-sm btn-info btn-block" name="' + video.id + '">More info</button>';
+	videoString += '<button class="btn btn-sm btn-info btn-block more-info-btn" name="' + video.id + '">More info</button>';
 	videoString += '<div class="tags">';
 	for (var i = 0; i < video.tags.length; i++){
 		videoString += '<span class="label label-success">' + video.tags[i] + '</span>';
@@ -120,10 +191,16 @@ function displayVideo(video, itemNum){
 
 // sets up the jQueryUI drag and drop
 function registerDragDrop(){
+	var docHeight = $('html').height();
+	var docWidth = $('.container').width();
+	if (docHeight > 1500){
+		docHeight += 500;
+	}
+
 	$( ".draggable" ).draggable({
     	revert: true,
-    	containment: 'window',
-    	helper: 'clone'
+    	helper: 'clone',
+    	containment: [0, 0, docWidth - 190, docHeight]
     });
     $( ".droppable" ).droppable({
     	drop: handleDrop

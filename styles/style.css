@@ -193,6 +193,31 @@ main{
 /*  Footer  */
 
 
+/* More info screen*/
+.more-info-container .screenshot{
+	width: 50%;
+	float: left;
+	min-height: 310px;
+}
+
+.more-info-container .description{
+	width: 50%;
+	float: left;
+	padding-left: 10px;
+	min-height: 310px;
+}
+
+.more-info-container .ratings{
+	width: 50%;
+	float: left;
+}
+
+.more-info-container .tags{
+	width: 50%;
+	float: left;
+	padding-left: 10px;
+}
+
 
 /* misc */
 .modal-backdrop{
