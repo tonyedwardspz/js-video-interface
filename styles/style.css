@@ -194,4 +194,7 @@ main{
 
 
 
-
+/* misc */
+.modal-backdrop{
+	min-height: 100%;
+}

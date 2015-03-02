@@ -1,16 +1,19 @@
-
-
-
+// set the scene
 $(function() {
     
     // display initial state videos
     for (var i = 0; i <= videoArray.length -1; i++){
-    	
 	    displayVideo(videoArray[i], i);
 	}
 
 	registerDragDrop();
+	setUpPlayList();
+	setUpListeners();
+});
 
+
+// set up the playlist positioning
+function setUpPlayList(){
 	var playlistOffset = $('.playlist').offset();
 	console.log(playlistOffset.top);
 	console.log(playlistOffset.left);
@@ -22,10 +25,7 @@ $(function() {
 		'left': playlistOffset.left,
 		'width': playlistWidth
 	});
-
-	setUpListeners();
-});
-
+}
 
 
 // set up listeners for various dome elements
@@ -33,19 +33,23 @@ function setUpListeners(){
 	var searchButton = $('#basic-addon2');
 	searchButton.click(function(ev) {
 		searchText = $('#searchArea').val();
-		if (searchText != null){
+		if (searchText != ""){
 			searchVideos(searchText);
 		} else {
-			alert('no search term');
+			BootstrapDialog = $('#modal').modal();
+			BootstrapDialog.show({
+	            title: 'No searchTerm',
+	            message: 'Please enter a search term and try again'
+	        });
 		}
 	});
 }
+
 
 // itterate the array of video objects to display results
 function searchVideos(searchTerm){
 	var searchMatches = [],
 		searchTerm = searchTerm.toUpperCase();
-		
 
 	// search through objects for matching terms
 	for (var i = 0; i < videoArray.length; i++){
@@ -87,6 +91,7 @@ function searchVideos(searchTerm){
 	}
 }
 
+
 // displays the passed video within the video grid
 function displayVideo(video, itemNum){
 
@@ -113,6 +118,7 @@ function displayVideo(video, itemNum){
 }
 
 
+// sets up the jQueryUI drag and drop
 function registerDragDrop(){
 	$( ".draggable" ).draggable({
     	revert: true,
@@ -123,6 +129,7 @@ function registerDragDrop(){
     	drop: handleDrop
 	});
 }
+
 
 // called when the user drops a video onto the playlist
 function handleDrop (event, ui ) {
