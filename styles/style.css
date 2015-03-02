@@ -20,6 +20,10 @@ header, main{
 	margin:20px 0 0 0;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 aside.col-sm-12{
 	width:100%;
 	margin-right: 15px;
@@ -44,8 +48,8 @@ h2{
 
 h3{
 	margin-top: 10px;
+	font-size: 18px;
 }
-
 
 
 /*  Header  */
@@ -54,12 +58,20 @@ h3{
 	float:left;
 }
 
+.input-group{
+	margin-top: 10px;
+}
+
 .menu-wrap{
 	z-index:2002;
+	overflow: hidden;
+	position: fixed;
+	top: 0px;
+	left: 0px;
 }
 
 .menu-button{
-	margin:-7px 0 0 -7px;
+	margin:0 0 0 -7px;
 }
 
 header div:last-of-type{
@@ -67,7 +79,7 @@ header div:last-of-type{
 	padding-right: 0;
 }
 header .btn{
-	width:39%;
+	width:78%;
 	font-size: 24px;
 }
 
@@ -92,6 +104,19 @@ i.play.fa{
 	padding: 10px;
 }
 
+header{
+	max-width: 1024px;
+	margin: 0 auto;
+}
+
+.navbar{
+	padding:10px 0;
+}
+
+.input-group span{
+	cursor: pointer;
+}
+
 
 /*  Main  */
 
@@ -113,6 +138,11 @@ main{
 	display: inline-block;
 }
 
+.content{
+	margin-top: 70px;
+	background: #fff;
+}
+
 
 
 /*  Aside  */
@@ -130,16 +160,34 @@ main{
 	text-align: center;
 }
 
-
-
 .droppable{
-	min-height:150px;
+	min-height:200px;
 	padding:0;
 	margin-left: -15px;
 }
 
 .ui-draggable-disabled{
 	border:1px solid #bce8f1;
+	min-height: 78px;
+
+}
+
+.ui-draggable-disabled button,
+.ui-draggable-disabled .tags,
+.ui-draggable-disabled img{
+	display: none;
+}
+
+.ui-draggable-disabled h3 {
+	font-size: 16px;
+}
+
+.ui-droppable-disabled{
+	min-height: 80px;
+}
+
+.addedtoplaylist{
+	background-color: #000;
 }
 
 /*  Footer  */
