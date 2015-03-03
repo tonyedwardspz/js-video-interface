@@ -115,14 +115,13 @@ function setUpListeners(){
         });
 	});
 
-	moreInfoListener();
+	moreInfoListener(document.querySelectorAll('.more-info-btn'));
 	tagsListener();
 }
 
 
 // set up the more info listeners
-function moreInfoListener(){
-	var moreInfoButton = document.querySelectorAll('.more-info-btn')
+function moreInfoListener(moreInfoButton){
 
 	for (var i = 0; i < moreInfoButton.length; i++){
 		moreInfoButton[i].addEventListener('click', function(ev) {
@@ -150,15 +149,22 @@ function tagsListener(){
 function faveVideosDialog(){
 	var faveVideosMessage = '';
 
-	faveVideosMessage += '<div class="more-info-container">';
-	faveVideosMessage += '<div class="screenshot"><iframe width="430" height="300" src="https://www.youtube.com/embed/' + video.videoID + '" frameborder="0" allowfullscreen></iframe></div>';
-	faveVideosMessage += '<div class="description"><p>' + video.description + '</p></div>';
-	faveVideosMessage += '<div class="ratings">This is the ratings</div>';
-	faveVideosMessage += '<div class="tags">This is the tags</div>';
-	faveVideosMessage += '</div>';
+	for (var i = 0; i < favouriteVideos.length; i++){
+		faveVideosMessage += '<div class="faves-container">';
+		faveVideosMessage += '<div class="title-tags">';
+		faveVideosMessage += '<h2>' + favouriteVideos[i].title + '</h2>';
+		for (var j = 0; j < favouriteVideos[i].tags.length; j++){
+			faveVideosMessage += '<span class="label label-success individualTag">' + favouriteVideos[i].tags[j] + '</span>';
+		}
+		faveVideosMessage += '</div>';
+		faveVideosMessage += '<div class="description">' + favouriteVideos[i].description.substring(0,100) + '......</div>';
+		faveVideosMessage += '<button class="btn btn-sm btn-info btn-block popup-more-info-btn" name="' + favouriteVideos[i].id + '">More info</button>';
+		faveVideosMessage += '</div>';
+		faveVideosMessage += '<div class="clearfix"></div>';
+	}
 
 	BootstrapDialog.show({
-        title: video.title,
+        title: 'My favourites',
         message: faveVideosMessage,
         size: 'size-wide',
         buttons: [{
@@ -167,8 +173,11 @@ function faveVideosDialog(){
             action: function(dialogRef){
                 dialogRef.close();
             }
-        }]  
-    });faveVideosMessage
+        }],
+        onshown: function(dialogRef){
+            moreInfoListener(document.querySelectorAll('.popup-more-info-btn'));
+        },
+    });
 }
 
 
@@ -244,7 +253,7 @@ function searchVideos(searchTerm){
 			displayVideo(vidMatch, i);
 		}
 		registerDragDrop();
-		moreInfoListener();
+		moreInfoListener(document.querySelectorAll('.more-info-btn'));
 		tagsListener();
 	} else {
 		alert("no match found");
@@ -331,8 +340,9 @@ function handleDrop (event, ui ) {
 }
 
 
-///////////////////////////// Video objects //////////////////////////////////////
-var videoArray = []
+///////////////////////////// Data //////////////////////////////////////
+var videoArray = [],
+	favouriteVideos = [];
 
 var video1 = {
 	id:1,
@@ -342,7 +352,8 @@ var video1 = {
 	description: "'The web is dead', was the introductory phrase of Christian Heilmann's TEDx speech. There is no excitement about new websites and the mobile phone is definitely not the easiest way of accessing the web when it comes to typing with your touch keyboard.</p><p> 'The problem with the internet was that we were like kittens with a laser pointer', he said. The new dawn of the internet was the app. There is an app for everything now days and the good thing is that apps are focused.",
 	rating: 5
 }
-videoArray.push(video1)
+videoArray.push(video1);
+favouriteVideos.push(video1);
 
 var video2 = {
 	id:2,
@@ -352,7 +363,7 @@ var video2 = {
 	description: "'This talk was given at a local TEDx event, produced independently of the TED Conferences. Christian Heilmann brings into attention a simple, vital and yet ignored ideea: dont't look up, don't look down...look around, look inside and outside and be you and foremost be creative in all forms and sizes. Make sure that your online version is a true reflection of your offline version and not a projection of what you could be if there weren't so many life impediments to overcome.",
 	rating: 5
 }
-videoArray.push(video2)
+videoArray.push(video2);
 
 var video3 = {
 	id:3,
@@ -362,7 +373,8 @@ var video3 = {
 	description: "Presented at jQuery Conference San Diego February 12-13, 2014. http://events.jquery.org/2014/san-diego/",
 	rating: 4
 }
-videoArray.push(video3)
+videoArray.push(video3);
+favouriteVideos.push(video3);
 
 var video4 = {
 	id:4,
@@ -372,7 +384,7 @@ var video4 = {
 	description: "'MIT Media Lab graduate students Deepak Jagdish and Daniel Smilkov share some surprising insights from Immersion, a tool they built to make sense of email metadata. Try out Immersion yourself and learn more about the team behind it at https://immersion.media.mit.edu and learn more about TEDxCambridge at http://www.tedxcambridge.com.",
 	rating: 3
 }
-videoArray.push(video4)
+videoArray.push(video4);
 
 var video5 = {
 	id:5,
@@ -382,7 +394,7 @@ var video5 = {
 	description: "This video is 100% certain to get you adding Rich Snippets markup to your site to enhance your sites presence in the search results pages. In this video I show you what snippets are and where to find the markup examples.",
 	rating: 5
 }
-videoArray.push(video5)
+videoArray.push(video5);
 
 var video6 = {
 	id:6,
@@ -392,7 +404,7 @@ var video6 = {
 	description: "How long should it take for my RDFa markup to appear in search results as a Rich Snippet after completing the submission form?",
 	rating: 4
 }
-videoArray.push(video6)
+videoArray.push(video6);
 
 var video7 = {
 	id:7,
@@ -402,7 +414,8 @@ var video7 = {
 	description: "Learn the basics of HTML in this quick tutorial",
 	rating: 2
 }
-videoArray.push(video7)
+videoArray.push(video7);
+favouriteVideos.push(video7);
 
 var video8 = {
 	id:8,
@@ -412,7 +425,7 @@ var video8 = {
 	description: "Paul Irish is a front-end developer who loves the web. He is on Google Chrome's Developer Relations team as well as jQuery's. He develops the HTML5 Boilerplate, the HTML5/CSS3 feature detection library Modernizr, HTML5 Please, CSS3 Please, and other bits and bobs of open source code.",
 	rating: 5
 }
-videoArray.push(video8)
+videoArray.push(video8);
 
 var video9 = {
 	id:9,
@@ -422,7 +435,8 @@ var video9 = {
 	description: "Aaron Frost & Dave Geddes present the goodness of JavaScript",
 	rating: 5
 }
-videoArray.push(video9)
+videoArray.push(video9);
+favouriteVideos.push(video9);
 
 var video10 = {
 	id:10,
@@ -432,7 +446,7 @@ var video10 = {
 	description: "I presented 'JavaScript Puzzlers - Puzzlers to Make You Think' to the folks of the Vancouver JavaScript Developers Group. We had some great interactions and some fantastic discussions afterwards. Big thanks to the VanJS folks for having me!",
 	rating: 5
 }
-videoArray.push(video10)
+videoArray.push(video10);
 
 var video11 = {
 	id:11,
@@ -442,7 +456,7 @@ var video11 = {
 	description: "We've entered the Ambient Computing Era and JavaScript is its dominant programing language, But a new computing era needs a new and better JavaScript. It's called ECMAScript 6 and it's about to become the new JavaScript standard. Why do we need it? Why did it take so long? What's in it? When can you use it? Answers will be given.",
 	rating: 5
 }
-videoArray.push(video11)
+videoArray.push(video11);
 
 var video12 = {
 	id:12,
@@ -452,7 +466,7 @@ var video12 = {
 	description: "How to Concatenate and Minify CSS using Grunt.",
 	rating: 5
 }
-videoArray.push(video12)
+videoArray.push(video12);
 
 var video13 = {
 	id:13,
@@ -462,7 +476,7 @@ var video13 = {
 	description: "Mark Otto, creater of Bootstrap, presents the future of front end frameworks",
 	rating: 3
 }
-videoArray.push(video13)
+videoArray.push(video13);
 
 var video14 = {
 	id:14,
@@ -472,7 +486,8 @@ var video14 = {
 	description: "",
 	rating: 4
 }
-videoArray.push(video14)
+videoArray.push(video14);
+favouriteVideos.push(video4);
 
 var video15 = {
 	id:15,
@@ -482,7 +497,7 @@ var video15 = {
 	description: "In his Forward JS presentation Charlie Key, CEO at Modulus, covers how a fast-moving company can use Node.js and JavaScript for basically everything and succeed. ",
 	rating: 5
 }
-videoArray.push(video15)
+videoArray.push(video15);
 
 var video16 = {
 	id:16,
@@ -492,7 +507,7 @@ var video16 = {
 	description: "The first presentation on Node.js from Ryan Dahl at JSConf 2009",
 	rating: 2
 }
-videoArray.push(video16)
+videoArray.push(video16);
 
 var video17 = {
 	id:17,
@@ -502,7 +517,7 @@ var video17 = {
 	description: "A pervasive elitism hovers in the background of collaborative software development: everyone secretly wants to be seen as a genius. In this talk, we discuss how to avoid this trap and gracefully exchange personal ego for personal growth and super-charged collaboration. We'll also examine how software tools affect social behaviors, and how to successfully manage the growth of new ideas.",
 	rating: 5
 }
-videoArray.push(video17)
+videoArray.push(video17);
 
 var video18 = {
 	id:18,
@@ -512,7 +527,7 @@ var video18 = {
 	description: "A presentation from internet weel on how to teach yourself to code by Mattan Griffel",
 	rating: 4
 }
-videoArray.push(video18)
+videoArray.push(video18);
 
 var video19 = {
 	id:19,
@@ -522,7 +537,7 @@ var video19 = {
 	description: "Josh Kaufman is the author of the #1 international bestseller, 'The Personal MBA: Master the Art of Business', as well as the upcoming book 'The First 20 Hours: Mastering the Toughest Part of Learning Anything.' Josh specializes in teaching people from all walks of life how to master practical knowledge and skills. In his talk, he shares how having his first child inspired him to approach learning in a whole new way. ",
 	rating: 5
 }
-videoArray.push(video19)
+videoArray.push(video19);
 
 var video20 = {
 	id:20,
@@ -532,7 +547,8 @@ var video20 = {
 	description: "Dave Rupert, lead developer at Paravel and co-host of the Shop Talk Show, gives essential tips and tricks on becoming flexible in responsive web design.",
 	rating: 5
 }
-videoArray.push(video20)
+videoArray.push(video20);
+favouriteVideos.push(video20);
 
 var video21 = {
 	id:21,
@@ -542,7 +558,7 @@ var video21 = {
 	description: "Dave Rupert, Lead Developer at Paravel, talks with Treehouse teacher Randy Hoyt about new HTML5 Tags, accessibility, British websites, and the importance of side projects.",
 	rating: 5
 }
-videoArray.push(video21)
+videoArray.push(video21);
 
 //////////////////////////// Libraries ///////////////////////////////////////////////
 

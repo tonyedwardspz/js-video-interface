@@ -33,7 +33,6 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
 
 /******************************My CSS***************************/
 
-
 /*  Layout   */
 
 header, main{
@@ -213,29 +212,58 @@ main{
 /*  Footer  */
 
 
-/* More info screen*/
-.more-info-container .screenshot{
+/* Dialogs*/
+
+.more-info-container .screenshot,
+.more-info-container .description,
+.more-info-container .ratings,
+.more-info-container .tags,
+.faves-container .title-tags{
 	width: 50%;
 	float: left;
+}
+
+.more-info-container .screenshot{
 	min-height: 310px;
 }
 
 .more-info-container .description{
-	width: 50%;
-	float: left;
 	padding-left: 10px;
 	min-height: 310px;
 }
 
 .more-info-container .ratings{
-	width: 50%;
-	float: left;
+
 }
 
 .more-info-container .tags{
-	width: 50%;
-	float: left;
 	padding-left: 10px;
+}
+
+.faves-container{
+	margin-top: 10px;
+}
+
+.faves-container h2{
+	padding-left: 15px;
+}
+
+.faves-container:first-of-type{
+	margin-top: 0px;
+}
+
+.faves-container .title-tags{
+
+}
+
+.faves-container .description{
+	width:30%;
+	float:left;
+}
+
+.faves-container button{
+    width:20%;
+    float:left;
 }
 
 
