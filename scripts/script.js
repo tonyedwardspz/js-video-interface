@@ -34,7 +34,7 @@ $(function() {
 
 
 // set up the playlist positioning
-function setUpPlayList(){
+var  setUpPlayList = function(){
 	var playlistOffset = $('.playlist').offset();
 	console.log(playlistOffset.top);
 	console.log(playlistOffset.left);
@@ -50,7 +50,7 @@ function setUpPlayList(){
 
 
 // set up listeners for various dom elements
-function setUpListeners(){
+var setUpListeners = function(){
 	var searchButton = $('#basic-addon2'),
 		searchArea = $('#searchArea'),
 		playButton = $('#play-btn'),
@@ -121,7 +121,7 @@ function setUpListeners(){
 
 
 // set up the more info listeners
-function moreInfoListener(moreInfoButton){
+var moreInfoListener = function(moreInfoButton){
 
 	for (var i = 0; i < moreInfoButton.length; i++){
 		moreInfoButton[i].addEventListener('click', function(ev) {
@@ -131,7 +131,7 @@ function moreInfoListener(moreInfoButton){
 }
 
 // set up the listeners for tags
-function tagsListener(){
+var tagsListener = function (){
 	var tags = document.querySelectorAll('.individualTag');
 
 	for (var i = 0; i < tags.length; i++){
@@ -146,7 +146,7 @@ function tagsListener(){
 }
 
 // displays the users favourited videos in popup dialog
-function faveVideosDialog(){
+var faveVideosDialog = function(){
 	var faveVideosMessage = '';
 
 	for (var i = 0; i < favouriteVideos.length; i++){
@@ -182,15 +182,20 @@ function faveVideosDialog(){
 
 
 // display more information dialog for selected video
-function moreInfoDialog(video){
+var moreInfoDialog = function(video){
 	var moreInfoMessage = '';
 
 	moreInfoMessage += '<div class="more-info-container">';
 	moreInfoMessage += '<div class="screenshot"><iframe width="430" height="300" src="https://www.youtube.com/embed/' + video.videoID + '" frameborder="0" allowfullscreen></iframe></div>';
 	moreInfoMessage += '<div class="description"><p>' + video.description + '</p></div>';
 	moreInfoMessage += '<div class="ratings">This is the ratings</div>';
-	moreInfoMessage += '<div class="tags">This is the tags</div>';
+	moreInfoMessage += '<div class="tags">';
+	for (var i = 0; i < video.tags.length; i++){
+			moreInfoMessage += '<span class="label label-success individualTag">' + video.tags[i] + '</span>';
+		}
 	moreInfoMessage += '</div>';
+	moreInfoMessage += '<div class="clearfix"></div>';
+	moreInfoMessage += '</div>';;
 
 	BootstrapDialog.show({
         title: video.title,
@@ -214,7 +219,7 @@ function moreInfoDialog(video){
 
 
 // itterate the array of video objects to display results
-function searchVideos(searchTerm){
+var searchVideos = function(searchTerm){
 	var searchMatches = [],
 		searchTerm = searchTerm.toUpperCase();
 
@@ -247,6 +252,9 @@ function searchVideos(searchTerm){
 	// if the match is found call the displayVideo method
 	if (searchMatches.length > 0){
 		$('#video-grid').empty();
+
+		searchTerm = searchTerm.toLowerCase().capitalizeFirstLetter();
+
 		$('h1').text("Results for '" + searchTerm + "'");
 		for (var i = 0; i < searchMatches.length; i++){
 			var vidMatch = searchMatches[i];
@@ -262,7 +270,7 @@ function searchVideos(searchTerm){
 
 
 // displays the passed video within the video grid
-function displayVideo(video, itemNum){
+var displayVideo = function(video, itemNum){
 
 	// insert clearfix for uneaven height columns
 	if (itemNum % 3 === 0){
@@ -288,7 +296,7 @@ function displayVideo(video, itemNum){
 
 
 // sets up the jQueryUI drag and drop
-function registerDragDrop(){
+var registerDragDrop = function(){
 	var docHeight = $('html').height();
 	var docWidth = $('.container').width();
 	if (docHeight > 1500){
@@ -307,7 +315,7 @@ function registerDragDrop(){
 
 
 // called when the user drops a video onto the playlist
-function handleDrop (event, ui ) {
+var handleDrop = function(event, ui ) {
     console.log("dropped");
 
     // disable the current draggable and droppable elements
@@ -337,6 +345,11 @@ function handleDrop (event, ui ) {
 		'left': offset.left,
 		'width': playlistWidth
 	});
+}
+
+// capitilise the first letter of a string
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
 
