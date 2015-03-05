@@ -12,6 +12,11 @@ $(function() {
       source: availableTags
     });
 
+    $( "#sortable" ).sortable({
+    	items: 'article:not(.unsortable)'
+    });
+    //$(".sortable").disableSelection();
+
 	$( "#searchArea" ).keypress(function( event ) {
 		checkMenu();
 		if ( event.which == 13 ) {
@@ -83,6 +88,7 @@ var setUpListeners = function(){
 
 	playButton.click(function(ev) {
 		checkMenu();
+		buildPlaylist();
 		nowPlayingDialog();
 	});
 
@@ -114,8 +120,11 @@ var moreInfoListener = function(moreInfoButton){
 
 
 // set up the listeners for tags
-var tagsListener = function (){
+var tagsListener = function (dialogRef){
 	var tags = document.querySelectorAll('.individualTag');
+	// if (dialogRef){
+	// 	dialogRef.close();
+	// }
 
 	checkMenu();
 	for (var i = 0; i < tags.length; i++){
@@ -130,19 +139,37 @@ var tagsListener = function (){
 }
 
 
+// listener for add to queue button on more infor screen
+var addToQueueListener = function(title, image, id){
+	var addToQueue = $('.addToQueue');
+	image = 'http://img.youtube.com/vi/' + image + '/mqdefault.jpg"';
+	addToQueue.click(function(ev) {
+		addToPlayList(title, image, id);
+	});
+}
+
+var socialShareListener = function(){
+	var socialimage = $('#socialIMG');
+	socialimage.click(function(ev) {
+		generalDialog('Video Shared', "Congratulations, You've shared think video on social media");
+	});
+}
+
+
 // displays the users favourited videos in popup dialog
 var faveVideosDialog = function(){
 	var faveVideosMessage = '';
 
 	for (var i = 0; i < favouriteVideos.length; i++){
 		faveVideosMessage += '<div class="faves-container">';
+		faveVideosMessage += '<div class="screenshot"><img src="http://img.youtube.com/vi/' + favouriteVideos[i].videoID + '/mqdefault.jpg" alt="' + favouriteVideos[i].title + '"></div>';
 		faveVideosMessage += '<div class="title-tags">';
 		faveVideosMessage += '<h2>' + favouriteVideos[i].title + '</h2>';
 		for (var j = 0; j < favouriteVideos[i].tags.length; j++){
 			faveVideosMessage += '<span class="label label-success individualTag">' + favouriteVideos[i].tags[j] + '</span>';
 		}
 		faveVideosMessage += '</div>';
-		faveVideosMessage += '<div class="description">' + favouriteVideos[i].description.substring(0,100) + '......</div>';
+		faveVideosMessage += '<div class="description">' + favouriteVideos[i].description.substring(0,150) + '......</div>';
 		faveVideosMessage += '<button class="btn btn-sm btn-info btn-block popup-more-info-btn" name="' + favouriteVideos[i].id + '">More info</button>';
 		faveVideosMessage += '</div>';
 		faveVideosMessage += '<div class="clearfix"></div>';
@@ -181,6 +208,7 @@ var createVideoMessage = function(video){
 	moreInfoMessage += '</div>';
 	moreInfoMessage += '<div class="userRatings">Your rating: <div></div></div>';
 	moreInfoMessage += '<div class="clearfix"></div>';
+	moreInfoMessage += '<div class="socialIcons"><image src="/images/socialIcons.png" title="share this video" id="socialIMG"></div>'
 	moreInfoMessage += '</div>';
 
 	return moreInfoMessage;
@@ -198,11 +226,11 @@ var moreInfoDialog = function(video){
         size: 'size-wide',
         buttons: [{
             label: 'Add to Queue',
-            cssClass: 'btn-success',
+            cssClass: 'btn-success addToQueue',
             action: function(dialogRef){
                 dialogRef.close();
             }
-        }, {
+        },{
             label: 'Dismiss',
             cssClass: 'btn-danger',
             action: function(dialogRef){
@@ -212,6 +240,9 @@ var moreInfoDialog = function(video){
         onshown: function(dialogRef){
             $('.screenshot').append('<iframe width="430" height="300" src="https://www.youtube.com/embed/' + video.videoID + '" frameborder="0" allowfullscreen></iframe>');
             createRaty(video);
+            addToQueueListener(video.title, video.videoID, video.id);
+            socialShareListener();
+            tagsListener(dialogRef);
         },
     });
 }
@@ -266,13 +297,15 @@ var createRaty = function(video){
 // display the now playing dialog
 var playlistItem = 0;
 var nowPlayingDialog = function(){
-	var moreInfoMessage
-	var video = findVideoByID(playQueue[playlistItem]);
+	var moreInfoMessage,
+		video = findVideoByID(playQueue[playlistItem]);
 
 	if (!video){ 
 		displayAllVideos();
+		registerDragDrop();
 		$('#play-btn').removeClass('btn-success').addClass('btn-primary');
 		generalDialog("End of playlist", "You have reached the end of your playlist. You can now build another");
+		emptyPlaylist();
 		return 
 	}
 	moreInfoMessage = createVideoMessage(video);
@@ -423,6 +456,7 @@ var registerDragDrop = function(){
     	//,containment: [0, 0, docWidth - 190, docHeight]
     });
     $( ".droppable" ).droppable({
+    	hoverClass: "ui-state-hover",
     	drop: handleDrop
 	});
 }
@@ -430,17 +464,19 @@ var registerDragDrop = function(){
 
 // called when the user drops a video onto the playlist
 var handleDrop = function(event, ui ) {
+	console.log(ui);
+	if (!ui.draggable.hasClass('dropped')){
+		var title = ui.draggable.children('h3').text(),
+			image = ui.draggable.children('img').attr('src')
+			id = ui.draggable.attr('id');
 
-	var title = ui.draggable.children('h3').text(),
-		image = ui.draggable.children('img').attr('src')
-		id = ui.draggable.attr('id');
+		//playQueue.push(id);
 
-	playQueue.push(id);
+		ui.draggable.draggable( 'disable' );
+		$('.ui-draggable-disabled').remove();
 
-	ui.draggable.draggable( 'disable' );
-	$('.ui-draggable-disabled').remove();
-
-	addToPlayList(title, image, id);
+		addToPlayList(title, image, id);
+	}
 }
 
 
@@ -452,6 +488,7 @@ var addToPlayList = function(title, image, id){
 	playlistItem += '<h3>' + title + '</h3>';
 
 	$(playlistItem).insertBefore('.droppable');
+	//$('aside').append(playlistItem);
 	$('.clearfix').remove();
 
 	var i = 0;
@@ -463,6 +500,7 @@ var addToPlayList = function(title, image, id){
 	});
 
 }
+
 
 // capitilise the first letter of a string
 String.prototype.capitalizeFirstLetter = function() {
@@ -491,6 +529,24 @@ var checkMenu = function(){
 	if ($('body').hasClass('show-menu')){
 		$('body').removeClass('show-menu');
 	}
+}
+
+
+// build the user playlist, called from play button
+var buildPlaylist = function(){
+	$( ".dropped" ).each(function( index ) {
+	    playQueue.push($(this).attr('id'));
+	    console.log($(this).attr('id'));
+
+	});
+}
+
+
+// empty the playlist after user finishes watching videos
+var emptyPlaylist = function(){
+	$( ".dropped" ).each(function( index ) {
+	    $(this).remove();
+	});
 }
 
 
@@ -539,7 +595,7 @@ var video4 = {
 	id:4,
 	title: "The Power of Metadata",
 	videoID: "i2a8pDbCabg",
-	tags: ["meta data", "email", "ted talk", "christian heilmann", "social media"],
+	tags: ["meta data", "email", "rich snippets"],
 	description: "'MIT Media Lab graduate students Deepak Jagdish and Daniel Smilkov share some surprising insights from Immersion, a tool they built to make sense of email metadata. Try out Immersion yourself and learn more about the team behind it at https://immersion.media.mit.edu and learn more about TEDxCambridge at http://www.tedxcambridge.com.",
 	rating: 3
 }
@@ -682,7 +738,7 @@ var video18 = {
 	id:18,
 	title: "How to Teach Yourself Code",
 	videoID: "T0qAjgQFR4c",
-	tags: ["javascript", "css", "html", "christian heilmann", "social media"],
+	tags: ["javascript", "css", "html"],
 	description: "A presentation from internet weel on how to teach yourself to code by Mattan Griffel",
 	rating: 4
 }
@@ -773,5 +829,4 @@ close:function(){this.ul.setAttribute("hidden","");this.index=-1;c.fire(this.inp
 "",this._list.filter(function(d){return a.filter(d,b)}).sort(this.sort).every(function(d,c){a.ul.appendChild(a.item(d,b));return c<a.maxItems-1}),0===this.ul.children.length?this.close():this.open()):this.close()}};g.all=[];g.FILTER_CONTAINS=function(a,b){return RegExp(c.regExpEscape(b.trim()),"i").test(a)};g.FILTER_STARTSWITH=function(a,b){return RegExp("^"+c.regExpEscape(b.trim()),"i").test(a)};g.SORT_BYLENGTH=function(a,b){return a.length!==b.length?a.length-b.length:a<b?-1:1};var k=Array.prototype.slice;
 c.create=function(a,b){var d=document.createElement(a),f;for(f in b){var e=b[f];"inside"===f?c(e).appendChild(d):"around"===f?(e=c(e),e.parentNode.insertBefore(d,e),d.appendChild(e)):f in d?d[f]=e:d.setAttribute(f,e)}return d};c.bind=function(a,b){if(a)for(var d in b){var c=b[d];d.split(/\s+/).forEach(function(b){a.addEventListener(b,c)})}};c.fire=function(a,b,d){var c=document.createEvent("HTMLEvents");c.initEvent(b,!0,!0);for(var e in d)c[e]=d[e];a.dispatchEvent(c)};c.regExpEscape=function(a){return a.replace(/[-\\^$*+?.()|[\]{}]/g,
 "\\$&")};"loading"!==document.readyState?l():document.addEventListener("DOMContentLoaded",l);g.$=c;g.$$=h})();
-
 

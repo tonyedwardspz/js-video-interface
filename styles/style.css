@@ -194,6 +194,7 @@ main{
 	min-height:200px;
 	padding-top:70px;
 	text-align: center;
+	margin-right: -15px;
 }
 
 .droppable p{
@@ -218,6 +219,11 @@ aside article h3{
 	float: left;
 	margin: 0;
 }
+
+.label-success{
+	cursor: pointer;
+}
+
 
 /*  Footer  */
 
@@ -271,17 +277,29 @@ aside article h3{
 }
 
 .faves-container .title-tags{
-
+	width:35%;
+	float:left;
+	padding-left:5px;
 }
 
 .faves-container .description{
-	width:30%;
+	width:35%;
 	float:left;
 }
 
 .faves-container button{
-    width:20%;
+    width:10%;
     float:left;
+    margin-top:20px;
+}
+
+.faves-container .screenshot{
+	width: 20%;
+	float: left;
+}
+
+.faves-container img{
+	max-width:100%;
 }
 
 
@@ -292,4 +310,17 @@ aside article h3{
 
 .ui-autocomplete{
 	z-index: 3000;
+}
+
+.socialIcons{
+	text-align: center;
+	padding-top: 15px;
+}
+
+#socialIMG{
+	cursor: pointer;
+}
+
+.bootstrap-dialog-title{
+	font-size: 20px;
 }
