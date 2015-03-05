@@ -324,3 +324,7 @@ aside article h3{
 .bootstrap-dialog-title{
 	font-size: 20px;
 }
+
+#preloader{
+	display:hidden;
+}
