@@ -15,7 +15,6 @@ $(function() {
     $( "#sortable" ).sortable({
     	items: 'article:not(.unsortable)'
     });
-    //$(".sortable").disableSelection();
 
 	$( "#searchArea" ).keypress(function( event ) {
 		checkMenu();
@@ -25,43 +24,11 @@ $(function() {
 		    if (searchText != ""){
 				searchVideos(searchText);
 			} else {
-				BootstrapDialog.show({
-		            title: 'No search term',
-		            message: 'Please enter a search term and try again',
-		            buttons: [{
-	                	label: 'Close',
-	                	action: function(dialogItself){
-		                    dialogItself.close();
-		                }
-		            }]
-		        });
+				generalDialog('No search term', 'Please enter a search term and try again');
 			}
 		}
 	});
 });
-
-
-// display all video objects after refreshing the video grid
-var displayAllVideos = function(){
-	$('#video-grid').empty();
-	for (var i = 0; i <= videoArray.length -1; i++){
-	    displayVideo(videoArray[i], i);
-	}
-}
-
-
-// set up the playlist positioning
-var  setUpPlayList = function(){
-	var playlistOffset = $('.playlist').offset();
-
-	var playlistWidth = $('.playlist').css('width');
-	$('.playlist').css({
-		'position': 'fixed',
-		'top': playlistOffset.top,
-		'left': playlistOffset.left,
-		'width': playlistWidth
-	});
-}
 
 
 // set up listeners for various dom elements
@@ -143,6 +110,8 @@ var addToQueueListener = function(title, image, id){
 	});
 }
 
+
+// listener for the social sharing icons
 var socialShareListener = function(){
 	var socialimage = $('#socialIMG');
 	socialimage.click(function(ev) {
@@ -151,24 +120,38 @@ var socialShareListener = function(){
 }
 
 
+// Add user tags listener on the more info dialog
+var addTagListener = function(){
+	var addTag = $('#addTag');
+	addTag.click(function(ev) {
+		addUserTag(addTag);
+	});
+}
+
+
+var addUserTag = function(buttonRef){
+	var videoid = buttonRef.attr("data-video-id"),
+		newTag = $('#userTag').val();
+
+	if (newTag != ''){
+		var video = findVideoByID(videoid);
+		video.tags.push(newTag);
+		//$('.modal-dialog .tags span').remove();
+		$('article#' + videoid + ' .tags').append('<span class="label label-success individualTag">' + newTag + '</span>')
+		//for (var i = 0; i < video.tags.length; i++){
+			$('.modal-dialog .tags').append('<span class="label label-success individualTag">' + newTag + '</span>');
+		
+		//}
+		$('#userTag').val('')
+	} else {
+		generalDialog('Error', 'Please enter text before adding a tag');
+	}
+}
+
+
 // displays the users favourited videos in popup dialog
 var faveVideosDialog = function(){
-	var faveVideosMessage = '';
-
-	for (var i = 0; i < favouriteVideos.length; i++){
-		faveVideosMessage += '<div class="faves-container">';
-		faveVideosMessage += '<div class="screenshot"><img src="http://img.youtube.com/vi/' + favouriteVideos[i].videoID + '/mqdefault.jpg" alt="' + favouriteVideos[i].title + '"></div>';
-		faveVideosMessage += '<div class="title-tags">';
-		faveVideosMessage += '<h2>' + favouriteVideos[i].title + '</h2>';
-		for (var j = 0; j < favouriteVideos[i].tags.length; j++){
-			faveVideosMessage += '<span class="label label-success individualTag">' + favouriteVideos[i].tags[j] + '</span>';
-		}
-		faveVideosMessage += '</div>';
-		faveVideosMessage += '<div class="description">' + favouriteVideos[i].description.substring(0,150) + '......</div>';
-		faveVideosMessage += '<button class="btn btn-sm btn-info btn-block popup-more-info-btn" name="' + favouriteVideos[i].id + '">More info</button>';
-		faveVideosMessage += '</div>';
-		faveVideosMessage += '<div class="clearfix"></div>';
-	}
+	var faveVideosMessage = buildFaveVideos();
 
 	BootstrapDialog.show({
         title: 'My favourites',
@@ -187,30 +170,6 @@ var faveVideosDialog = function(){
     });
 }
 
-
-// create the video message for now playing and more info
-var createVideoMessage = function(video){
-	var moreInfoMessage = '';
-
-	moreInfoMessage += '<div class="more-info-container" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
-	moreInfoMessage += '<meta itemprop="duration" content="T04M50S" />';
-	moreInfoMessage += '<meta itemprop="thumbnailURL" content="http://i.ytimg.com/vi/' + video.videoID + '/hqdefault.jpg" />';
-	moreInfoMessage += '<meta itemprop="embedURL" content="https://youtube.googleapis.com/v/' + video.videoID + '" />';
-	moreInfoMessage += '<div class="screenshot" id="schema-videoobject"></div>';
-	moreInfoMessage += '<div class="description" itemprop="description"><p>' + video.description + '</p></div>';
-	moreInfoMessage += '<div class="ratings">Average rating: </div>';
-	moreInfoMessage += '<div class="tags">';
-	for (var i = 0; i < video.tags.length; i++){
-			moreInfoMessage += '<span class="label label-success individualTag">' + video.tags[i] + '</span>';
-		}
-	moreInfoMessage += '</div>';
-	moreInfoMessage += '<div class="userRatings">Your rating: <div></div></div>';
-	moreInfoMessage += '<div class="clearfix"></div>';
-	moreInfoMessage += '<div class="socialIcons"><image src="/images/socialIcons.png" title="share this video" id="socialIMG"></div>'
-	moreInfoMessage += '</div>';
-
-	return moreInfoMessage;
-}
 
 // display more information dialog for selected video
 var moreInfoDialog = function(video){
@@ -241,12 +200,13 @@ var moreInfoDialog = function(video){
             addToQueueListener(video.title, video.videoID, video.id);
             socialShareListener();
             tagsListener(dialogRef);
+            addTagListener();
         },
     });
 }
 
 
-// dialog for errors
+// Dialog for user feedback - e.g no search term
 var generalDialog = function(title, message){
 	BootstrapDialog.show({
         title: title,
@@ -259,35 +219,6 @@ var generalDialog = function(title, message){
             }
         }]
     });
-}
-
-
-// setup the user ratings system
-var createRaty = function(video){
-	userRating = getUserScore(video.id);
-
-	$('.ratings').raty({
-    	score: video.rating,
-    	readOnly: true
-    });
-    if (userRating != null){
-        $('.userRatings div').raty({
-        	score: userRating,
-        	mouseout: function(score, evt) {
-				if (score > 0){
-					setUserScore(video.id, score);
-				}
-			}
-        });
-    } else {
-    	$('.userRatings div').raty({
-        	mouseout: function(score, evt) {
-				if (score > 0){
-					setUserScore(video.id, score);
-				}
-			}
-        });
-    }
 }
 
 
@@ -307,10 +238,6 @@ var nowPlayingDialog = function(){
 	}
 	moreInfoMessage = createVideoMessage(video);
 	
-
-	// Next video stuff here
-
-
 	BootstrapDialog.show({
         title: 'Now playing',
         message: moreInfoMessage,
@@ -396,23 +323,6 @@ var searchVideos = function(searchTerm){
 }
 
 
-// search the video objects by ID
-var findVideoByID = function(videoID){
-	if (!videoID){ 
-		return false 
-	}
-
-	for (var i = 0; i < videoArray.length; i++){
-		var vidObj = videoArray[i];
-
-		if (vidObj.id == videoID){
-			return videoArray[i];
-		}
-	}
-	return false;
-}
-
-
 // displays the passed video within the video grid
 var displayVideo = function(video, itemNum){
 	var videoString = '';
@@ -437,6 +347,78 @@ var displayVideo = function(video, itemNum){
 	videoString += '</article>';
 
 	$('#video-grid').append(videoString);
+}
+
+
+// create the video message for now playing and more info
+var createVideoMessage = function(video){
+	var moreInfoMessage = '';
+
+	moreInfoMessage += '<div class="more-info-container" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
+	moreInfoMessage += '<meta itemprop="duration" content="T04M50S" />';
+	moreInfoMessage += '<meta itemprop="thumbnailURL" content="http://i.ytimg.com/vi/' + video.videoID + '/hqdefault.jpg" />';
+	moreInfoMessage += '<meta itemprop="embedURL" content="https://youtube.googleapis.com/v/' + video.videoID + '" />';
+	moreInfoMessage += '<div class="screenshot" id="schema-videoobject"></div>';
+	moreInfoMessage += '<div class="description" itemprop="description"><p>' + video.description + '</p></div>';
+	moreInfoMessage += '<div class="ratings">Average rating: </div>';
+	moreInfoMessage += '<div class="tags">';
+	moreInfoMessage += '<input id="userTag" placeholder="your tag" class="form-control"/>';
+	moreInfoMessage += '<button id="addTag" class="btn btn-primary" data-video-id="' + video.id + '">Add Tag</button>';
+	for (var i = 0; i < video.tags.length; i++){
+			moreInfoMessage += '<span class="label label-success individualTag">' + video.tags[i] + '</span>';
+		}
+	moreInfoMessage += '</div>';
+	moreInfoMessage += '<div class="userRatings">Your rating: <div></div></div>';
+	moreInfoMessage += '<div class="clearfix"></div>';
+	moreInfoMessage += '<div class="socialIcons"><image src="/images/socialIcons.png" title="share this video" id="socialIMG"></div>'
+	moreInfoMessage += '</div>';
+
+	return moreInfoMessage;
+}
+
+
+// build the favourite video items
+var buildFaveVideos = function(){
+	var faveVideosMessage = '';
+
+	for (var i = 0; i < favouriteVideos.length; i++){
+		faveVideosMessage += '<div class="faves-container">';
+		faveVideosMessage += '<div class="screenshot"><img src="http://img.youtube.com/vi/' + favouriteVideos[i].videoID + '/mqdefault.jpg" alt="' + favouriteVideos[i].title + '"></div>';
+		faveVideosMessage += '<div class="title-tags">';
+		faveVideosMessage += '<h2>' + favouriteVideos[i].title + '</h2>';
+		for (var j = 0; j < favouriteVideos[i].tags.length; j++){
+			faveVideosMessage += '<span class="label label-success individualTag">' + favouriteVideos[i].tags[j] + '</span>';
+		}
+		faveVideosMessage += '</div>';
+		faveVideosMessage += '<div class="description">' + favouriteVideos[i].description.substring(0,150) + '......</div>';
+		faveVideosMessage += '<button class="btn btn-sm btn-info btn-block popup-more-info-btn" name="' + favouriteVideos[i].id + '">More info</button>';
+		faveVideosMessage += '</div>';
+		faveVideosMessage += '<div class="clearfix"></div>';
+	}
+	return faveVideosMessage;
+}
+
+
+// display all video objects after refreshing the video grid
+var displayAllVideos = function(){
+	$('#video-grid').empty();
+	for (var i = 0; i <= videoArray.length -1; i++){
+	    displayVideo(videoArray[i], i);
+	}
+}
+
+
+// set up the playlist positioning
+var  setUpPlayList = function(){
+	var playlistOffset = $('.playlist').offset();
+
+	var playlistWidth = $('.playlist').css('width');
+	$('.playlist').css({
+		'position': 'fixed',
+		'top': playlistOffset.top,
+		'left': playlistOffset.left,
+		'width': playlistWidth
+	});
 }
 
 
@@ -472,6 +454,52 @@ var handleDrop = function(event, ui ) {
 
 		addToPlayList(title, image, id);
 	}
+}
+
+
+// search the video objects by ID
+var findVideoByID = function(videoID){
+	if (!videoID){ 
+		return false 
+	}
+
+	for (var i = 0; i < videoArray.length; i++){
+		var vidObj = videoArray[i];
+
+		if (vidObj.id == videoID){
+			return videoArray[i];
+		}
+	}
+	return false;
+}
+
+
+// setup the user ratings system
+var createRaty = function(video){
+	userRating = getUserScore(video.id);
+
+	$('.ratings').raty({
+    	score: video.rating,
+    	readOnly: true
+    });
+    if (userRating != null){
+        $('.userRatings div').raty({
+        	score: userRating,
+        	mouseout: function(score, evt) {
+				if (score > 0){
+					setUserScore(video.id, score);
+				}
+			}
+        });
+    } else {
+    	$('.userRatings div').raty({
+        	mouseout: function(score, evt) {
+				if (score > 0){
+					setUserScore(video.id, score);
+				}
+			}
+        });
+    }
 }
 
 

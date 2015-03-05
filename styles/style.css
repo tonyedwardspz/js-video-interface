@@ -240,6 +240,10 @@ aside article h3{
 	font-size: 20px;
 }
 
+.more-info-container .ratings{
+	margin-top: 20px;
+}
+
 .more-info-container .userRatings div{
 	color: #FFD700;
 	display:inline-block;
@@ -315,4 +319,15 @@ aside article h3{
 
 #preloader{
 	display:hidden;
+}
+
+#userTag{
+	width:60%;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+
+#addTag{
+	width: 40%;
+	display: inline-block;
 }
