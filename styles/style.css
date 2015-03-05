@@ -317,7 +317,8 @@ aside article h3{
 	padding-top: 15px;
 }
 
-#socialIMG{
+#socialIMG,
+.dropped{
 	cursor: pointer;
 }
 
