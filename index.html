@@ -65,7 +65,9 @@
                 <div class="row sidebar">
 
                     <aside class="col-sm-12">
-                        <div class="droppable"></div>
+                        <div class="droppable">
+                            <p>Drag item here to add to playlist</p>
+                        </div>
                     </aside>
 
                 </div>
@@ -83,7 +85,6 @@
             <div class="icon-list" role="menu">
                 <a href="#" role="menuitem" id="home" title="Home"><i class="fa fa-fw fa-home"></i><span>Home</span></a>
                 <a href="#" role="menuitem" id="favourites" title="favourites"><i class="fa fa-fw fa-heart"></i><span>Favorites</span></a>
-                <a href="#" role="menuitem" id="likes" title="liked-videos"><i class="fa fa-fw fa-thumbs-o-up"></i><span>Likes</span></a>
 
                 <div class="tag-cloud" role="presentation">
 
@@ -107,25 +108,6 @@
         </nav>
         <button class="close-button" id="close-button" type="submit" formtarget="_top">Close Menu</button>
     </div>
-
-    <!-- Modal Dialog-->
-    <div class="modal fade" id="modal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close">
-                        <i class="fa fa-times"></i>
-                    </button>
-                    <h4 class="modal-title" aria-labelledby="myModalLabel"></h4>
-                </div>
-                <div class="modal-body">
-                    <p></p>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 
     <script src="scripts/jquery-1.11.2.min.js"></script>
     <script src="scripts/jquery-ui.min.js"></script>
