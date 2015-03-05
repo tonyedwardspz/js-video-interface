@@ -120,9 +120,6 @@ var moreInfoListener = function(moreInfoButton){
 // set up the listeners for tags
 var tagsListener = function (dialogRef){
 	var tags = document.querySelectorAll('.individualTag');
-	// if (dialogRef){
-	// 	dialogRef.close();
-	// }
 
 	checkMenu();
 	for (var i = 0; i < tags.length; i++){
@@ -319,7 +316,7 @@ var nowPlayingDialog = function(){
         message: moreInfoMessage,
         size: 'size-wide',
         buttons: [{
-            label: 'Next playlist video',
+            label: '<i class="fa fa-forward fa-2x">',
             cssClass: 'btn-primary',
             action: function(dialogRef){
             	if (findVideoByID(playQueue[playlistItem])){
@@ -332,7 +329,7 @@ var nowPlayingDialog = function(){
 	            }
             }
         }, {
-        	label: 'Stop Playback',
+        	label: '<i class="fa fa-stop fa-2x">',
         	cssClass: 'btn-danger',
             action: function(dialogItself){
             	$('#play-btn').removeClass('btn-success').addClass('btn-primary');
