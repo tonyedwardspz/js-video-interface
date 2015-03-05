@@ -53,8 +53,6 @@ var displayAllVideos = function(){
 // set up the playlist positioning
 var  setUpPlayList = function(){
 	var playlistOffset = $('.playlist').offset();
-	//console.log(playlistOffset.top);
-	//console.log(playlistOffset.left);
 
 	var playlistWidth = $('.playlist').css('width');
 	$('.playlist').css({
@@ -197,9 +195,12 @@ var faveVideosDialog = function(){
 var createVideoMessage = function(video){
 	var moreInfoMessage = '';
 
-	moreInfoMessage += '<div class="more-info-container">';
-	moreInfoMessage += '<div class="screenshot"></div>';
-	moreInfoMessage += '<div class="description"><p>' + video.description + '</p></div>';
+	moreInfoMessage += '<div class="more-info-container" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
+	moreInfoMessage += '<meta itemprop="duration" content="T04M50S" />';
+	moreInfoMessage += '<meta itemprop="thumbnailURL" content="http://i.ytimg.com/vi/' + video.videoID + '/hqdefault.jpg" />';
+	moreInfoMessage += '<meta itemprop="embedURL" content="https://youtube.googleapis.com/v/' + video.videoID + '" />';
+	moreInfoMessage += '<div class="screenshot" id="schema-videoobject"></div>';
+	moreInfoMessage += '<div class="description" itemprop="description"><p>' + video.description + '</p></div>';
 	moreInfoMessage += '<div class="ratings">Average rating: </div>';
 	moreInfoMessage += '<div class="tags">';
 	for (var i = 0; i < video.tags.length; i++){
@@ -273,7 +274,6 @@ var createRaty = function(video){
     	readOnly: true
     });
     if (userRating != null){
-    	console.log(userRating);
         $('.userRatings div').raty({
         	score: userRating,
         	mouseout: function(score, evt) {
@@ -311,7 +311,7 @@ var nowPlayingDialog = function(){
 	moreInfoMessage = createVideoMessage(video);
 	
 
-	// add some more stuff here
+	// Next video stuff here
 
 
 	BootstrapDialog.show({
@@ -407,8 +407,6 @@ var findVideoByID = function(videoID){
 
 	for (var i = 0; i < videoArray.length; i++){
 		var vidObj = videoArray[i];
-		console.log(videoArray[i].id);
-		console.log(videoID);
 
 		if (vidObj.id == videoID){
 			return videoArray[i];
@@ -427,9 +425,12 @@ var displayVideo = function(video, itemNum){
     	$('#video-grid').append('<div class="clearfix"></div>');
     }
 	
-	videoString += '<article class="col-sm-4 draggable" id="' + video.id + '">';
+	videoString += '<article class="col-sm-4 draggable" id="' + video.id + '" itemprop="video" itemscope itemtype="http://schema.org/VideoObject">';
+	videoString += '<meta itemprop="duration" content="T04M50S" />';
+	videoString += '<meta itemprop="thumbnailURL" content="http://i.ytimg.com/vi/' + video.videoID + '/hqdefault.jpg" />';
+	videoString += '<meta itemprop="embedURL" content="https://youtube.googleapis.com/v/' + video.videoID + '" />';
 	videoString += '<img src="http://img.youtube.com/vi/' + video.videoID + '/mqdefault.jpg" alt="' + video.title + '">';
-	videoString += '<h3>' + video.title + '</h3>';
+	videoString += '<h3 itemprop="name">' + video.title + '</h3>';
 	videoString += '<button class="btn btn-sm btn-info btn-block more-info-btn" name="' + video.id + '">More info</button>';
 	videoString += '<div class="tags">';
 	for (var i = 0; i < video.tags.length; i++){
@@ -464,13 +465,10 @@ var registerDragDrop = function(){
 
 // called when the user drops a video onto the playlist
 var handleDrop = function(event, ui ) {
-	console.log(ui);
 	if (!ui.draggable.hasClass('dropped')){
 		var title = ui.draggable.children('h3').text(),
 			image = ui.draggable.children('img').attr('src')
 			id = ui.draggable.attr('id');
-
-		//playQueue.push(id);
 
 		ui.draggable.draggable( 'disable' );
 		$('.ui-draggable-disabled').remove();
@@ -535,9 +533,8 @@ var checkMenu = function(){
 // build the user playlist, called from play button
 var buildPlaylist = function(){
 	$( ".dropped" ).each(function( index ) {
+		playQueue = [];
 	    playQueue.push($(this).attr('id'));
-	    console.log($(this).attr('id'));
-
 	});
 }
 
