@@ -13,6 +13,7 @@ var searchArea,
 // set the scene
 $(function() {
     
+    // retrive persistent elements from the dom
 	searchArea = $( "#searchArea" );
 	playButton = $('#play-btn');
 	searchButton = $('#basic-addon2');
@@ -36,7 +37,7 @@ $(function() {
     	items: 'article:not(.unsortable)'
     });
 
-    // Welcome tour
+    // Start the welcome tour if this is the first visit
 	tour.init();
 	tour.start();
 });
@@ -47,7 +48,7 @@ var setUpListeners = function(){
 	
 	searchButton.click(function(ev) {
 		checkMenu();
-		searchText = searchArea.val();
+		var searchText = searchArea.val();
 		if (searchText != ""){
 			searchVideos(searchText);
 		} else {
@@ -55,6 +56,7 @@ var setUpListeners = function(){
 		}
 	});
 
+	// trigger search by pressing enter when within the seach box
 	searchArea.keypress(function( event ) {
 		checkMenu();
 		if ( event.which == 13 ) {
@@ -138,7 +140,7 @@ var socialShareListener = function(){
 }
 
 
-// Add user tags listener on the more info dialog
+// Add user tags button listener on the more info dialog
 var addTagListener = function(){
 	var addTag = $('#addTag');
 	addTag.click(function(ev) {
@@ -171,9 +173,7 @@ var faveVideosDialog = function(){
 
 // display more information dialog for selected video
 var moreInfoDialog = function(video){
-	var moreInfoMessage = '';
-
-	moreInfoMessage = createVideoMessage(video);
+	var moreInfoMessage = createVideoMessage(video);
 
 	BootstrapDialog.show({
         title: video.title,
@@ -203,7 +203,6 @@ var moreInfoDialog = function(video){
         onshown: function(dialogRef){
             $('.screenshot').append('<iframe width="430" height="300" src="https://www.youtube.com/embed/' + video.videoID + '" frameborder="0" allowfullscreen></iframe>');
             createRaty(video);
-            //addToQueueListener(video.title, video.videoID, video.id);
             socialShareListener();
             tagsListener(dialogRef);
             addTagListener();
@@ -234,6 +233,7 @@ var nowPlayingDialog = function(){
 	var moreInfoMessage,
 		video = findVideoByID(playQueue[playlistItem]);
 
+	// if there is no video, return to the main screen, after displaying message
 	if (!video){ 
 		displayAllVideos();
 		registerDragDrop();
@@ -291,6 +291,7 @@ var searchVideos = function(searchTerm){
 			match = false,
 			thisValue = '';
 
+		// check the title and description for a match
 		for (var key in vidObj){
 			if( typeof vidObj[key] == 'string' ) {
 				thisValue = vidObj[key].toUpperCase();
@@ -372,7 +373,7 @@ var displayVideo = function(video, itemNum){
 }
 
 
-// create the video message for now playing and more info
+// create the video message for now playing and more info, including rich snippets
 var createVideoMessage = function(video){
 	var moreInfoMessage = '';
 
@@ -403,6 +404,7 @@ var createVideoMessage = function(video){
 var buildFaveVideos = function(){
 	var faveVideosMessage = '';
 
+	// create a message for every entry in the favourites array
 	for (var i = 0; i < favouriteVideos.length; i++){
 		faveVideosMessage += '<div class="faves-container">';
 		faveVideosMessage += '<div class="screenshotFave"><img src="http://img.youtube.com/vi/' + favouriteVideos[i].videoID + '/mqdefault.jpg" alt="' + favouriteVideos[i].title + '"></div>';
@@ -432,9 +434,9 @@ var displayAllVideos = function(){
 
 // set up the playlist positioning
 var  setUpPlayList = function(){
-	var playlistOffset = playlist.offset();
+	var playlistOffset = playlist.offset(),
+		playlistWidth = playlist.css('width');
 
-	var playlistWidth = playlist.css('width');
 	playlist.css({
 		'position': 'fixed',
 		'top': playlistOffset.top,
@@ -446,11 +448,6 @@ var  setUpPlayList = function(){
 
 // sets up the jQueryUI drag and drop
 var registerDragDrop = function(){
-	var docHeight = $('html').height();
-	var docWidth = $('.container').width();
-	if (docHeight > 1500){
-		docHeight += 500;
-	}
 
 	$( ".draggable" ).draggable({
     	revert: false,
@@ -527,6 +524,7 @@ var createRaty = function(video){
 // add video information to playlist
 var addToPlayList = function(title, image, id){
 	var playlistItem = '';
+
 	playlistItem += '<article class="dropped" id="' + id + '">';
 	playlistItem += '<img src="' + image + '" alt="' + title + '">';
 	playlistItem += '<h3>' + title + '</h3>';
@@ -884,12 +882,10 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
  */
 !function(s){"use strict";function e(s){return new RegExp("(^|\\s+)"+s+"(\\s+|$)")}function n(s,e){var n=a(s,e)?c:t;n(s,e)}var a,t,c;"classList"in document.documentElement?(a=function(s,e){return s.classList.contains(e)},t=function(s,e){s.classList.add(e)},c=function(s,e){s.classList.remove(e)}):(a=function(s,n){return e(n).test(s.className)},t=function(s,e){a(s,e)||(s.className=s.className+" "+e)},c=function(s,n){s.className=s.className.replace(e(n)," ")});var i={hasClass:a,addClass:t,removeClass:c,toggleClass:n,has:a,add:t,remove:c,toggle:n};"function"==typeof define&&define.amd?define(i):s.classie=i}(window);
 
-/* main.js
- * http://www.codrops.com
+/* http://tympanus.net/codrops/2014/09/16/off-canvas-menu-effects/
  * Licensed under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  * Copyright 2014, Codrops
- * http://www.codrops.com
  */
 !function(){function e(){n()}function n(){d.addEventListener("click",t),i&&i.addEventListener("click",t),o.addEventListener("click",function(e){var n=e.target;u&&n!==d&&t()})}function t(){u?classie.remove(c,"show-menu"):classie.add(c,"show-menu"),u=!u}var c=document.body,o=document.querySelector(".container"),d=document.getElementById("open-button"),i=document.getElementById("close-button"),u=!1;e()}();
 
@@ -922,7 +918,7 @@ var tour = new Tour({
 	},{
 		element: ".ui-droppable",
 		title: "Build a playlist",
-		content: "Drag and drop videos here to build your playlist.",
+		content: "Drag and drop videos here to build your playlist. You can reorder your playlist by draging items up and down.",
 		placement: "left"
 	},{
 		element: "#play-btn",

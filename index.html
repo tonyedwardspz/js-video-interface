@@ -56,7 +56,7 @@
         	<main class="col-sm-9">
 
                 <h1>Recent videos</h1>
-                <section class="row" id="video-grid"></section>
+                <section class="row" id="video-grid" role="main"></section>
 
         	</main>
 
@@ -79,11 +79,15 @@
     </div>
 
     <!-- Main Menu -->
-    <div class="menu-wrap" role="navigation">
-        <nav class="menu" role="menubar">
+    <div class="menu-wrap" >
+        <nav class="menu" role="navigation">
             <div class="icon-list" role="menu">
-                <a href="#" role="menuitem" id="home" title="Home"><i class="fa fa-fw fa-home"></i><span>Home</span></a>
-                <a href="#" role="menuitem" id="favourites" title="favourites"><i class="fa fa-fw fa-heart"></i><span>Favorites</span></a>
+                <a href="#" role="menuitem" id="home" title="Home">
+                    <i class="fa fa-fw fa-home"></i><span>Home</span>
+                </a>
+                <a href="#" role="menuitem" id="favourites" title="favourites">
+                    <i class="fa fa-fw fa-heart"></i><span>Favorites</span>
+                </a>
 
                 <div class="tag-cloud" role="presentation">
 
@@ -109,7 +113,7 @@
     </div>
 
     <div id="preloader" aria-hidden="true">
-        <img src="images/socialIcons.png" width="1" height="1" />
+        <img src="images/socialIcons.png" width="1" height="1" alt=""/>
     </div>
 
     <script src="scripts/jquery-1.11.2.min.js"></script>
