@@ -1,11 +1,13 @@
-// globally accessible selector
+// persistent ui selectors
 var searchArea,
 	playButton,
 	searchButton,
 	homeButton,
 	favesButton,
-	videoGrid;
-	
+	videoGrid,
+	body,
+	playlist,
+	droppable;
 
 
 // set the scene
@@ -17,8 +19,9 @@ $(function() {
 	homeButton = $('#home');
 	favesButton = $('#favourites');
 	videoGrid = $('#video-grid');
-
-
+	body = $('body');
+	playlist = $('.playlist');
+	droppable = $(".droppable");
 
     displayAllVideos();
 	setUpPlayList();
@@ -33,13 +36,9 @@ $(function() {
     	items: 'article:not(.unsortable)'
     });
 
-    // Initialize the tour
-tour.init();
-
-// Start the tour
-tour.start();
-
-	
+    // Welcome tour
+	tour.init();
+	tour.start();
 });
 
 
@@ -112,8 +111,8 @@ var tagsListener = function (dialogRef){
 		tags[i].addEventListener('click', function(ev) {
 			var clickedTag = $(this).html();
 			searchVideos(clickedTag);
-			if ($('body').hasClass('show-menu')){
-				$('body').removeClass('show-menu');
+			if (body.hasClass('show-menu')){
+				body.removeClass('show-menu');
 			}
     	});
 	}	
@@ -289,6 +288,7 @@ var searchVideos = function(searchTerm){
 			if( typeof vidObj[key] == 'string' ) {
 				thisValue = vidObj[key].toUpperCase();
 			    if (thisValue.indexOf(searchTerm) > -1){
+			    	buildPlaylist();
 			   		match = true;
 			    }
 			} else if (vidObj[key].constructor === Array){
@@ -310,17 +310,30 @@ var searchVideos = function(searchTerm){
 		videoGrid.empty();
 
 		searchTerm = searchTerm.toLowerCase().capitalizeFirstLetter();
-
 		$('h1').text("Results for '" + searchTerm + "'");
+		
+		buildPlaylist();
+		var vidMatch = null,
+			doNotDisplay = false;
 		for (var i = 0; i < searchMatches.length; i++){
-			var vidMatch = searchMatches[i];
-			displayVideo(vidMatch, i);
+			vidMatch = searchMatches[i];
+			doNotDisplay = false;
+
+			for (var j = 0; j < playQueue.length; j++){
+				if (vidMatch.id == playQueue[j]){
+					doNotDisplay = true;
+					break;
+				}
+			}
+			if (!doNotDisplay){
+				displayVideo(vidMatch, i);
+			}
 		}
 		registerDragDrop();
 		moreInfoListener(document.querySelectorAll('.more-info-btn'));
 		tagsListener();
 	} else {
-		alert("no match found");
+		generalDialog("No Matches", "Please try another search term");
 	}
 }
 
@@ -412,10 +425,10 @@ var displayAllVideos = function(){
 
 // set up the playlist positioning
 var  setUpPlayList = function(){
-	var playlistOffset = $('.playlist').offset();
+	var playlistOffset = playlist.offset();
 
-	var playlistWidth = $('.playlist').css('width');
-	$('.playlist').css({
+	var playlistWidth = playlist.css('width');
+	playlist.css({
 		'position': 'fixed',
 		'top': playlistOffset.top,
 		'left': playlistOffset.left,
@@ -434,10 +447,10 @@ var registerDragDrop = function(){
 
 	$( ".draggable" ).draggable({
     	revert: false,
-    	helper: 'clone'
-    	//,containment: [0, 0, docWidth - 190, docHeight]
+    	helper: 'clone',
+    	containment: "body"
     });
-    $( ".droppable" ).droppable({
+    droppable.droppable({
     	hoverClass: "ui-state-hover",
     	drop: handleDrop
 	});
@@ -454,9 +467,7 @@ var handleDrop = function(event, ui ) {
 		ui.draggable.draggable( 'disable' );
 		$('.ui-draggable-disabled').remove();
 	}
-
-		addToPlayList(title, image, id);
-	
+	addToPlayList(title, image, id);
 }
 
 
@@ -516,7 +527,7 @@ var addToPlayList = function(title, image, id){
 	playlistItem += '<a href="#" title="Remove item" id="remove' + id +'"><i class="fa fa-minus-circle"></i></a>';
 	playlistItem += '</article>';
 
-	$(playlistItem).insertBefore('.droppable');
+	$(playlistItem).insertBefore(droppable);
 	$('main article#' + id).remove();
 	
 	$('.playlist #remove' + id).click(function(ev) {
@@ -528,7 +539,7 @@ var addToPlayList = function(title, image, id){
 
 // remove an item from the playlist
 var removePlaylistItem = function(id){
-	var itemToRemove = $('aside article#' + id);
+	var itemToRemove = $('aside article[id=' + id + ']');
 	itemToRemove.remove();
 
 	var video = findVideoByID(id);
@@ -582,8 +593,8 @@ var setUserScore = function(videoID, score){
 
 // close menu if its open
 var checkMenu = function(){
-	if ($('body').hasClass('show-menu')){
-		$('body').removeClass('show-menu');
+	if (body.hasClass('show-menu')){
+		body.removeClass('show-menu');
 	}
 }
 
