@@ -305,7 +305,7 @@ var searchVideos = function(searchTerm){
 		}
 	}
 
-	// if the match is found call the displayVideo method
+	// if the match is found call the displayVideo method, unless its in the user playlist
 	if (searchMatches.length > 0){
 		videoGrid.empty();
 
@@ -916,25 +916,20 @@ var tour = new Tour({
 		element: ".ui-droppable",
 		title: "Build a playlist",
 		content: "Drag and drop videos here to build your playlist.",
-		backdrop: true,
 		placement: "left"
 	},{
 		element: "#play-btn",
 		title: "Cast your videos",
-		content: "Press play to cast the playlist to your TV.",
-		backdrop: true,
 		placement: "bottom"
 	},{
 		element: "#open-button",
 		title: "The Menu",
 		content: "The menu contains your favourite videos and tags.",
-		backdrop: true,
 		placement: "right"
 	},{
 		element: "#2 button",
 		title: "Video Information",
 		content: "Get the video description, rate videos and add new tags through the 'more info' button.",
-		backdrop: true,
 		placement: "below"
 	}
 ]});
