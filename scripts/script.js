@@ -180,6 +180,13 @@ var moreInfoDialog = function(video){
         message: moreInfoMessage,
         size: 'size-wide',
         buttons: [{
+            label: 'Add to favourites',
+            cssClass: 'btn-primary addToQueue',
+            action: function(dialogRef){
+                favouriteVideos.push(video);
+                generalDialog("Added to favourites", video.title + " has been added to your favourites list.");
+            }
+        },{
             label: 'Add to Queue',
             cssClass: 'btn-success addToQueue',
             action: function(dialogRef){
@@ -330,7 +337,7 @@ var searchVideos = function(searchTerm){
 			}
 		}
 		registerDragDrop();
-		moreInfoListener(document.querySelectorAll('.more-info-btn'));
+		moreInfoListener();
 		tagsListener();
 	} else {
 		generalDialog("No Matches", "Please try another search term");
@@ -406,7 +413,7 @@ var buildFaveVideos = function(){
 		}
 		faveVideosMessage += '</div>';
 		faveVideosMessage += '<div class="description">' + favouriteVideos[i].description.substring(0,150) + '......</div>';
-		faveVideosMessage += '<button class="btn btn-sm btn-info btn-block popup-more-info-btn" name="' + favouriteVideos[i].id + '">More info</button>';
+		faveVideosMessage += '<button class="btn btn-sm btn-info btn-block popup-more-info-btn more-info-btn" name="' + favouriteVideos[i].id + '">More info</button>';
 		faveVideosMessage += '</div>';
 		faveVideosMessage += '<div class="clearfix"></div>';
 	}
@@ -920,6 +927,7 @@ var tour = new Tour({
 	},{
 		element: "#play-btn",
 		title: "Cast your videos",
+		content: "Press play to cast your videos to the television",
 		placement: "bottom"
 	},{
 		element: "#open-button",
