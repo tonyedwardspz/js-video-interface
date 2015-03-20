@@ -928,7 +928,7 @@ var tour = new Tour({
 	},{
 		element: "#open-button",
 		title: "The Menu",
-		content: "The menu contains your favourite videos and tags.",
+		content: "The menu contains your favourite videos and tags. You can return to the home screen from here.",
 		placement: "right"
 	},{
 		element: "#2 button",
