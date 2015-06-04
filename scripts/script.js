@@ -491,7 +491,6 @@ var findVideoByID = function(videoID){
 	return false;
 }
 
-
 // setup the user ratings system
 var createRaty = function(video){
 	userRating = getUserScore(video.id);
